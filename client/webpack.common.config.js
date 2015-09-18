@@ -1,13 +1,16 @@
 // Common webpack configuration used by webpack.hot.config and webpack.rails.config.
 
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
 
   // the project dir
   context: __dirname,
-  entry: ['jquery', 'jquery-ujs', './assets/javascripts/App'],
-
+  entry: {
+    vendor: ['jquery', 'jquery-ujs'],
+    app: ['./assets/javascripts/App'],
+  },
   resolve: {
     root: [
       path.join(__dirname, 'scripts'),
@@ -15,6 +18,14 @@ module.exports = {
     ],
     extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      chunks: ['app'],
+      filename: 'vendor.js',
+      minChunks: Infinity,
+    }),
+  ],
   module: {
     loaders: [
 
